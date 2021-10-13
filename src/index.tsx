@@ -1,5 +1,6 @@
 import QuillEditor from './editor/quill-editor';
 import { QuillToolbar } from './toolbar/quill-toolbar';
+import QuillIcons from './constants/icons';
 import type {
   EditorEventHandler,
   SelectionChangeData,
@@ -9,7 +10,7 @@ import type {
   HtmlChangeData,
 } from './constants/editor-event';
 export default QuillEditor;
-export { QuillToolbar };
+export { QuillToolbar, QuillIcons };
 export type {
   EditorEventHandler,
   SelectionChangeData,

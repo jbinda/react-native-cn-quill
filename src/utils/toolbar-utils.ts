@@ -113,6 +113,8 @@ const createToolSet = (
             if (!format || format.type === formatType.select) {
               ic.push({
                 name: key,
+                alias: key === 'imageSize' ? 'width' : undefined,
+                source: formatIcon,
                 values: listItems.map((x) => {
                   let icon =
                     x.type === formatValueType.icon
@@ -122,6 +124,21 @@ const createToolSet = (
                         ? icons[key][x.value]
                         : undefined
                       : undefined;
+
+                  if (key === 'imageSize') {
+                    return {
+                      name: x.name,
+                      alias: 'width',
+                      valueOff: false,
+                      valueOn: x.name === 'original' ? false : x.value,
+                      source: icon,
+                      type: (
+                        x.type === formatValueType.icon && icon ? true : false
+                      )
+                        ? formatType.icon
+                        : formatType.toggle,
+                    } as ToggleData;
+                  }
 
                   return {
                     name: x.name,

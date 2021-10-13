@@ -16,12 +16,13 @@ interface Props {
   valueOff?: string | number | boolean;
   style: StyleProp<ViewStyle>;
   name: string;
+  alias?: string;
 }
 
 export const ToggleTextButton: React.FC<Props> = (props) => {
   const { apply, isSelected, theme } = useToolbar();
-  const { name, valueOff, valueOn, valueName, style } = props;
-  const selected = isSelected(name, valueOn);
+  const { name, alias, valueOff, valueOn, valueName, style } = props;
+  const selected = isSelected(alias ?? name, valueOn);
   const handlePresss = () => apply(name, selected ? valueOff : valueOn);
   const styles = makeStyles(theme);
   return (

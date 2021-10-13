@@ -13,11 +13,17 @@ import { useToolbar } from './toolbar-context';
 
 interface Props {
   name: string;
+  alias?: string;
   items: Array<ToggleData>;
   style: StyleProp<ViewStyle>;
 }
 
-export const TextListButton: React.FC<Props> = ({ name, items, style }) => {
+export const TextListButton: React.FC<Props> = ({
+  name,
+  alias,
+  items,
+  style,
+}) => {
   const { theme, show, hide, open, selectionName, getSelected } = useToolbar();
   const styles = makeStyles(theme);
 
@@ -26,7 +32,7 @@ export const TextListButton: React.FC<Props> = ({ name, items, style }) => {
     else show(name, items);
   };
 
-  const selectedValue = getSelected(name);
+  const selectedValue = getSelected(alias ?? name);
   const selectedItem = items.find((x) => x.valueOn === selectedValue);
   const isOpen = selectionName === name;
 

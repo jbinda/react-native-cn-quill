@@ -67,6 +67,7 @@ export const SelectionBar: React.FC<Props> = ({
                 <ToggleTextButton
                   key={index}
                   name={selectionName}
+                  alias={item.alias}
                   valueOff={false}
                   style={toolStyle}
                   valueOn={item.valueOn}
