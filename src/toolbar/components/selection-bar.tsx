@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   ScrollView,
   Text,
@@ -24,8 +24,18 @@ export const SelectionBar: React.FC<Props> = ({
   toolStyle,
   selectionStyle,
 }) => {
-  const { theme, options, hide, selectionName } = useToolbar();
+  const {
+    theme,
+    options,
+    hide,
+    selectionName,
+    availableSelections,
+  } = useToolbar();
   const styles = useStyles(theme);
+
+  useEffect(() => {
+    if (!availableSelections.includes(selectionName)) hide();
+  }, [availableSelections, selectionName, hide]);
 
   return (
     <View style={[styles.selection, selectionStyle]}>

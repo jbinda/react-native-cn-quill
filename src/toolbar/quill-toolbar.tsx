@@ -48,6 +48,7 @@ interface QuillToolbarProps {
 
 interface ToolbarState {
   toolSets: Array<Array<ToggleData | TextListData | ColorListData>>;
+  availableSelections: string[];
   formats: object;
   theme: ToolbarTheme;
 }
@@ -61,6 +62,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
     super(props);
     this.state = {
       toolSets: [],
+      availableSelections: [],
       formats: {},
       theme: lightTheme,
     };
@@ -105,7 +107,9 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
       toolbarOptions = options;
     }
     const toolSets = getToolbarData(toolbarOptions, custom?.icons);
-    this.setState({ toolSets });
+    const availableSelections = toolSets.flat().map((set) => set.name);
+
+    this.setState({ toolSets, availableSelections });
   };
 
   private listenToEditor = () => {
@@ -130,7 +134,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
 
   renderToolbar = () => {
     const { styles, custom } = this.props;
-    const { toolSets, theme, formats } = this.state;
+    const { toolSets, theme, formats, availableSelections } = this.state;
     const classes = makeStyles(theme);
     return (
       <ToolbarProvider
@@ -138,6 +142,7 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
         format={this.format}
         selectedFormats={formats}
         custom={custom}
+        availableSelections={availableSelections}
       >
         <SelectionBar
           toolStyle={styles?.tool}

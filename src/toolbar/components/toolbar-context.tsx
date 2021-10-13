@@ -14,6 +14,7 @@ export interface ContextProps {
   options: Array<ToggleData>;
   selectionName: string;
   getSelected: (name: string) => any;
+  availableSelections: string[];
 }
 
 const ToolbarContext = React.createContext<ContextProps>({
@@ -27,6 +28,7 @@ const ToolbarContext = React.createContext<ContextProps>({
   options: [],
   selectionName: '',
   getSelected: () => false,
+  availableSelections: [],
 });
 
 export const ToolbarConsumer = ToolbarContext.Consumer;
@@ -36,6 +38,7 @@ interface ProviderProps {
   selectedFormats: Record<string, any>;
   theme: ToolbarTheme;
   custom?: ToolbarCustom;
+  availableSelections: string[];
 }
 
 interface ProviderState {
@@ -125,7 +128,12 @@ export class ToolbarProvider extends Component<ProviderProps, ProviderState> {
   };
 
   render() {
-    const { selectedFormats, children, theme } = this.props;
+    const {
+      selectedFormats,
+      children,
+      theme,
+      availableSelections,
+    } = this.props;
     const { open, options, name } = this.state;
     const styles = makeStyles(theme);
     return (
@@ -141,6 +149,7 @@ export class ToolbarProvider extends Component<ProviderProps, ProviderState> {
           getSelected: this.getSelected,
           selectionName: name,
           options,
+          availableSelections,
         }}
       >
         <Animated.View
