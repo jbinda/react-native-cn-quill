@@ -63,8 +63,8 @@ export const ToolSet: React.FC<Props> = (props) => {
 const styles = StyleSheet.create({
   toolset: {
     flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
+    justifyContent: 'center',
+    alignItems: 'center',
     paddingTop: 2,
     paddingBottom: 2,
     paddingLeft: 3,

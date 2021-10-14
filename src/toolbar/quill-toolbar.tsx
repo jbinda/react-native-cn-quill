@@ -33,6 +33,8 @@ interface customStyles {
   selection: StyleProp<ViewStyle>;
   toolset?: object;
   tool?: object;
+  contentContainer?: StyleProp<ViewStyle>;
+  itemContainer?: StyleProp<ViewStyle>;
 }
 
 interface QuillToolbarProps {
@@ -146,20 +148,27 @@ export class QuillToolbar extends Component<QuillToolbarProps, ToolbarState> {
             horizontal={true}
             bounces={false}
             showsHorizontalScrollIndicator={false}
+            contentContainerStyle={[
+              styles?.contentContainer || classes.contentContainer,
+            ]}
           >
             {toolSets.map((object, index) => {
               return (
                 object.length > 0 && (
-                  <React.Fragment key={index}>
+                  <View
+                    key={index}
+                    style={[styles?.itemContainer || classes.itemContainer]}
+                  >
                     <ToolSet
                       tools={object}
                       style={styles?.toolset}
                       toolStyle={styles?.tool}
                     />
-                    {toolSets.length > index && (
-                      <ToolbarSeperator color={theme.color} />
-                    )}
-                  </React.Fragment>
+                    {toolSets.length > index &&
+                      index !== toolSets.length - 1 && (
+                        <ToolbarSeperator color={theme.color} />
+                      )}
+                  </View>
                 )
               );
             })}
@@ -198,7 +207,17 @@ const makeStyles = (theme: ToolbarTheme) =>
       padding: 2,
       backgroundColor: theme.background,
       flexDirection: 'row',
-      justifyContent: 'flex-start',
+      justifyContent: 'center',
+      alignItems: 'center',
       height: theme.size + 8,
+    },
+    contentContainer: {
+      flexGrow: 1,
+      justifyContent: 'center',
+    },
+    itemContainer: {
+      flexDirection: 'row',
+      alignContent: 'center',
+      justifyContent: 'center',
     },
   });
