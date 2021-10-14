@@ -21,7 +21,8 @@
     "release": "release-it",
     "example": "yarn --cwd example",
     "bootstrap": "yarn example && yarn",
-    "prepublish": "tsc"
+    "prepublish": "tsc",
+    "push": "yarn prepublish && yalc push"
   },
   "keywords": [
     "react-native",
