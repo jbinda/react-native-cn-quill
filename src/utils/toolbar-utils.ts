@@ -209,9 +209,7 @@ const createToolSet = (
                         valueOff: false,
                         valueOn: x.default ? false : x.value,
                         source: x.icon || icons[x.name],
-                        type: (
-                          x.type === formatValueType.icon && icon ? true : false
-                        )
+                        type: (x.icon ? true : false)
                           ? formatType.icon
                           : formatType.toggle,
                       } as ToggleData;

@@ -41,6 +41,8 @@ export interface IconListData {
 export interface TextListData {
   name: string;
   alias?: string;
+  styleAlias?: string;
+  source?: ImageSourcePropType;
   values: Array<ToggleData>;
   type: formatType.select;
 }

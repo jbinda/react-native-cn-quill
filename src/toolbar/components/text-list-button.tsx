@@ -9,18 +9,23 @@ import {
   StyleProp,
 } from 'react-native';
 import type { ToggleData, ToolbarTheme } from '../../types';
+import type { ImageSourcePropType } from 'react-native';
 import { useToolbar } from './toolbar-context';
 
 interface Props {
   name: string;
   alias?: string;
+  styleAlias?: string;
+  source?: ImageSourcePropType;
   items: Array<ToggleData>;
   style: StyleProp<ViewStyle>;
 }
 
 export const TextListButton: React.FC<Props> = ({
   name,
+  source,
   alias,
+  styleAlias,
   items,
   style,
 }) => {
@@ -32,20 +37,49 @@ export const TextListButton: React.FC<Props> = ({
     else show(name, items);
   };
 
+  const isSelectionCheck = (x: any, selectedValue: any) => {
+    if (alias && styleAlias) {
+      console.log('IS SELECTED CALLBACK');
+      console.log('SELECTED', selectedValue);
+      console.log('ITEM', x);
+
+      if (x.valueOn === false && selectedValue === false) return true;
+      if (typeof selectedValue === 'string')
+        return selectedValue.includes(`${styleAlias}: ${x.valueOn}`);
+      else {
+        return false;
+      }
+    } else {
+      return x.valueOn === selectedValue;
+    }
+  };
+
   const selectedValue = getSelected(alias ?? name);
-  const selectedItem = items.find((x) => x.valueOn === selectedValue);
+  const selectedItem = items.find((x) => isSelectionCheck(x, selectedValue));
   const isOpen = selectionName === name;
+
+  const getListComponent = () => {
+    if (selectedItem?.source) {
+      return <Image source={selectedItem.source} style={[styles.image]} />;
+    } else if (selectedItem && selectedItem.name) {
+      return (
+        <Text style={styles.text}>
+          {selectedItem ? selectedItem.name : name}
+        </Text>
+      );
+    } else {
+      if (source) {
+        return <Image source={source} style={[styles.image]} />;
+      } else {
+        return <Text style={styles.text}>{name}</Text>;
+      }
+    }
+  };
 
   return (
     <TouchableOpacity onPress={showMenu}>
       <View style={[styles.tool, style]}>
-        {selectedItem?.source ? (
-          <Image source={selectedItem.source} style={[styles.image]} />
-        ) : (
-          <Text style={styles.text}>
-            {selectedItem ? selectedItem.name : name}
-          </Text>
-        )}
+        {getListComponent()}
         {isOpen && <View style={[styles.overlay]} />}
       </View>
     </TouchableOpacity>

@@ -17,12 +17,28 @@ interface Props {
   valueOff: string | number | boolean;
   source: ImageSourcePropType;
   style: StyleProp<ViewStyle>;
+  alias?: string;
+  styleAlias?: string;
 }
 
 export const ToggleIconButton: React.FC<Props> = (props) => {
   const { apply, isSelected, theme } = useToolbar();
-  const { name, valueOff, valueOn, source, style } = props;
-  const selected = isSelected(name, valueOn);
+  const { name, valueOff, valueOn, source, style, alias, styleAlias } = props;
+
+  let isSelectionCheck;
+  if (alias && styleAlias) {
+    isSelectionCheck = (value: any, selected?: any) => {
+      if (
+        valueOn === false &&
+        value === false &&
+        !selected.includes(styleAlias)
+      )
+        return true;
+      return selected.includes(`${styleAlias}: ${value}`);
+    };
+  }
+
+  const selected = isSelected(alias ?? name, valueOn, isSelectionCheck);
   const handlePresss = () => apply(name, selected ? valueOff : valueOn);
   const styles = makeStyles(theme);
   return (
