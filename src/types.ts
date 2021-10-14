@@ -17,6 +17,7 @@ export interface formatDefault {
 export interface ToggleData {
   name: string;
   alias?: string;
+  styleAlias?: string;
   valueOn: string | number | boolean;
   valueOff: string | number | boolean;
   source: ImageSourcePropType;

@@ -17,12 +17,39 @@ interface Props {
   style: StyleProp<ViewStyle>;
   name: string;
   alias?: string;
+  styleAlias?: string;
 }
 
 export const ToggleTextButton: React.FC<Props> = (props) => {
   const { apply, isSelected, theme } = useToolbar();
-  const { name, alias, valueOff, valueOn, valueName, style } = props;
-  const selected = isSelected(alias ?? name, valueOn);
+  const {
+    name,
+    alias,
+    valueOff,
+    valueOn,
+    valueName,
+    styleAlias,
+    style,
+  } = props;
+
+  let isSelectionCheck;
+  if (alias && styleAlias) {
+    isSelectionCheck = (value: any, selected?: any) => {
+      // console.log('IS SELECTED CALLBACK');
+      // console.log('SELECTED', selected);
+      // console.log('VALUE', value);
+
+      if (
+        valueOn === false &&
+        value === false &&
+        !selected.includes(styleAlias)
+      )
+        return true;
+      return selected.includes(`${styleAlias}: ${value}`);
+    };
+  }
+
+  const selected = isSelected(alias ?? name, valueOn, isSelectionCheck);
   const handlePresss = () => apply(name, selected ? valueOff : valueOn);
   const styles = makeStyles(theme);
   return (

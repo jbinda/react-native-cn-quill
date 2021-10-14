@@ -6,7 +6,11 @@ import type { ToggleData, ToolbarCustom, ToolbarTheme } from '../../types';
 export interface ContextProps {
   apply: (name: string, value: any) => void;
   selectedFormats: object;
-  isSelected: (name: string, value: any) => boolean;
+  isSelected: (
+    name: string,
+    value: any,
+    isSelectionCheck?: (selected: any) => boolean
+  ) => boolean;
   theme: ToolbarTheme;
   show: (name: string, options: Array<ToggleData>) => void;
   hide: Function;
@@ -104,9 +108,17 @@ export class ToolbarProvider extends Component<ProviderProps, ProviderState> {
     this.animatedValue = new Animated.Value(theme.size + 10);
   }
 
-  isSelected = (name: string, value: any = true): boolean => {
+  isSelected = (
+    name: string,
+    value: any = true,
+    isSelectionCheck?: (value: any, selected: any) => boolean
+  ): boolean => {
     const { selectedFormats } = this.props;
     const selected = selectedFormats[name];
+    // console.log('TOOLBAR CONTEXT', name, selected);
+    if (selected && isSelectionCheck) {
+      return isSelectionCheck(value, selected);
+    }
     return selected ? selected === value : value === false;
   };
 

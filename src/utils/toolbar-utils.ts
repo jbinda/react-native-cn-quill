@@ -180,12 +180,14 @@ const createToolSet = (
           const icon = value.icon;
           const listItems = value.values;
           const alias = value.alias;
+          const styleAlias = value.styleAlias;
 
           if (listItems.length > 0) {
             if (!format || format.type === formatType.select) {
               ic.push({
                 name: key,
                 alias,
+                styleAlias,
                 source: icon || formatIcon,
                 values: listItems
                   .map((x: string | ValueItem) => {
@@ -193,6 +195,7 @@ const createToolSet = (
                       return {
                         name: x,
                         alias,
+                        styleAlias,
                         valueOff: false,
                         valueOn: x,
                         source: icon,
@@ -202,6 +205,7 @@ const createToolSet = (
                       return {
                         name: x.name,
                         alias,
+                        styleAlias,
                         valueOff: false,
                         valueOn: x.default ? false : x.value,
                         source: x.icon || icons[x.name],

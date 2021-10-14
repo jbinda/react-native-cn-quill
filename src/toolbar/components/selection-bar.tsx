@@ -78,6 +78,7 @@ export const SelectionBar: React.FC<Props> = ({
                   key={index}
                   name={selectionName}
                   alias={item.alias}
+                  styleAlias={item.styleAlias}
                   valueOff={false}
                   style={toolStyle}
                   valueOn={item.valueOn}
