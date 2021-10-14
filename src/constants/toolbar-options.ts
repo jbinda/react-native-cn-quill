@@ -1,7 +1,29 @@
 const fullOptions = [
   ['bold', 'italic', 'underline', 'strike'], // toggled buttons
   ['blockquote', 'code-block'],
-  [{ size: ['small', false, 'large', 'huge'] }], // custom dropdown
+  [
+    {
+      size: [
+        '8px',
+        '9px',
+        '10px',
+        '11px',
+        '12px',
+        false,
+        '14px',
+        '16px',
+        '18px',
+        '20px',
+        '22px',
+        '24px',
+        '26px',
+        '28px',
+        '36px',
+        '48px',
+        '72px',
+      ],
+    },
+  ], // custom dropdown
 
   [{ header: 1 }, { header: 2 }], // custom button values
   [{ list: 'ordered' }, { list: 'bullet' }],
