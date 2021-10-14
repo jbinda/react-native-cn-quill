@@ -1,6 +1,14 @@
 import * as React from 'react';
 import { WebView, WebViewProps } from 'react-native-webview';
-import { View, Text, StyleSheet, StyleProp, ViewStyle } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  StyleProp,
+  ViewStyle,
+  Platform,
+} from 'react-native';
 import { createHtml } from '../utils/editor-utils';
 import type { EditorMessage, EditorResponse, QuillConfig } from '../types';
 import type {
@@ -41,6 +49,7 @@ export default class QuillEditor extends React.Component<
   EditorState
 > {
   private _webview: React.RefObject<WebView>;
+  private _input: React.RefObject<TextInput>;
   private _handlers: Array<{
     event: EditorEventType;
     handler: EditorEventHandler;
@@ -50,6 +59,7 @@ export default class QuillEditor extends React.Component<
   constructor(props: EditorProps) {
     super(props);
     this._webview = React.createRef();
+    this._input = React.createRef();
     this.state = {
       webviewContent: this.getInitalHtml(),
     };
@@ -190,6 +200,7 @@ export default class QuillEditor extends React.Component<
   };
 
   focus = () => {
+    this.showAndroidKeyboard();
     this.post({ command: 'focus' });
   };
 
@@ -270,32 +281,49 @@ export default class QuillEditor extends React.Component<
     this.post({ command: 'dangerouslyPasteHTML', index, html });
   };
 
+  /**
+   * open android keyboard
+   * @platform android
+   */
+  showAndroidKeyboard() {
+    if (Platform.OS === 'android') {
+      this._input?.current?.focus();
+      this._webview.current?.requestFocus &&
+        this._webview.current?.requestFocus();
+    }
+  }
+
   renderWebview = (
     content: string,
     style: StyleProp<ViewStyle>,
     props: WebViewProps = {}
   ) => (
-    <WebView
-      scrollEnabled={false}
-      hideKeyboardAccessoryView={true}
-      keyboardDisplayRequiresUserAction={false}
-      originWhitelist={['*']}
-      style={style}
-      onError={(syntheticEvent) => {
-        const { nativeEvent } = syntheticEvent;
-        console.warn('WebView error: ', nativeEvent);
-      }}
-      allowFileAccess={true}
-      domStorageEnabled={false}
-      automaticallyAdjustContentInsets={true}
-      bounces={false}
-      dataDetectorTypes="none"
-      {...props}
-      javaScriptEnabled={true}
-      source={{ html: content }}
-      ref={this._webview}
-      onMessage={this.onMessage}
-    />
+    <>
+      <WebView
+        scrollEnabled={false}
+        hideKeyboardAccessoryView={true}
+        keyboardDisplayRequiresUserAction={false}
+        originWhitelist={['*']}
+        style={style}
+        onError={(syntheticEvent) => {
+          const { nativeEvent } = syntheticEvent;
+          console.warn('WebView error: ', nativeEvent);
+        }}
+        allowFileAccess={true}
+        domStorageEnabled={false}
+        automaticallyAdjustContentInsets={true}
+        bounces={false}
+        dataDetectorTypes="none"
+        {...props}
+        javaScriptEnabled={true}
+        source={{ html: content }}
+        ref={this._webview}
+        onMessage={this.onMessage}
+      />
+      {Platform.OS === 'android' && (
+        <TextInput ref={this._input} style={styles._input} />
+      )}
+    </>
   );
 
   render() {
@@ -330,5 +358,11 @@ let styles = StyleSheet.create({
   webView: {
     flexGrow: 1,
     borderWidth: 0,
+  },
+  _input: {
+    position: 'absolute',
+    width: 0,
+    height: 0,
+    bottom: 0,
   },
 });
