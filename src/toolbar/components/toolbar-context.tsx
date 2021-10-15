@@ -115,7 +115,7 @@ export class ToolbarProvider extends Component<ProviderProps, ProviderState> {
   ): boolean => {
     const { selectedFormats } = this.props;
     const selected = selectedFormats[name];
-    // console.log('TOOLBAR CONTEXT', name, selected);
+
     if (selected && isSelectionCheck) {
       return isSelectionCheck(value, selected);
     }

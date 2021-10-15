@@ -35,10 +35,6 @@ export const ToggleTextButton: React.FC<Props> = (props) => {
   let isSelectionCheck;
   if (alias && styleAlias) {
     isSelectionCheck = (value: any, selected?: any) => {
-      // console.log('IS SELECTED CALLBACK');
-      // console.log('SELECTED', selected);
-      // console.log('VALUE', value);
-
       if (
         valueOn === false &&
         value === false &&

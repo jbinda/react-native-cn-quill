@@ -39,10 +39,6 @@ export const TextListButton: React.FC<Props> = ({
 
   const isSelectionCheck = (x: any, selectedValue: any) => {
     if (alias && styleAlias) {
-      console.log('IS SELECTED CALLBACK');
-      console.log('SELECTED', selectedValue);
-      console.log('ITEM', x);
-
       if (x.valueOn === false && selectedValue === false) return true;
       if (typeof selectedValue === 'string')
         return selectedValue.includes(`${styleAlias}: ${x.valueOn}`);
