@@ -227,3 +227,15 @@ const createToolSet = (
   }
   return ic;
 };
+
+export const isSelectionCheck = ({
+  valueOn,
+  styleAlias,
+}: {
+  valueOn: string | number | boolean;
+  styleAlias: string;
+}) => (value: any, selected?: any) => {
+  if (valueOn === false && value === false && !selected.includes(styleAlias))
+    return true;
+  return selected.includes(`${styleAlias}: ${value}`);
+};

@@ -9,6 +9,7 @@ import {
   ImageSourcePropType,
 } from 'react-native';
 import type { ToolbarTheme } from '../../types';
+import { isSelectionCheck } from '../../utils/toolbar-utils';
 import { useToolbar } from './toolbar-context';
 
 interface Props {
@@ -25,20 +26,10 @@ export const ToggleIconButton: React.FC<Props> = (props) => {
   const { apply, isSelected, theme } = useToolbar();
   const { name, valueOff, valueOn, source, style, alias, styleAlias } = props;
 
-  let isSelectionCheck;
-  if (alias && styleAlias) {
-    isSelectionCheck = (value: any, selected?: any) => {
-      if (
-        valueOn === false &&
-        value === false &&
-        !selected.includes(styleAlias)
-      )
-        return true;
-      return selected.includes(`${styleAlias}: ${value}`);
-    };
-  }
+  const selectionCallback =
+    alias && styleAlias ? isSelectionCheck({ valueOn, styleAlias }) : undefined;
 
-  const selected = isSelected(alias ?? name, valueOn, isSelectionCheck);
+  const selected = isSelected(alias ?? name, valueOn, selectionCallback);
   const handlePresss = () => apply(name, selected ? valueOff : valueOn);
   const styles = makeStyles(theme);
   return (
