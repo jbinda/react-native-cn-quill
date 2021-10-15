@@ -2,6 +2,9 @@ export const editor_js = `
 <script>
 (function (doc) {
 
+  const ImageBlot = Quill.import('formats/image');
+  const Parchment = Quill.import('parchment');
+
   var sendMessage = function (message) {
     if (window.ReactNativeWebView)
       window.ReactNativeWebView.postMessage(message);
@@ -194,6 +197,22 @@ export const editor_js = `
   quill.root.addEventListener('focus', function () {
     sendMessage(JSON.stringify({type: 'focus'}));
   });
+
+  quill.root.addEventListener('click', (ev) => {
+    var target = ev.target && ev.target.tagName && ev.target.tagName.toUpperCase() === 'IMG';
+
+    let image = Parchment.find(ev.target);
+              
+    // If it is a image, we show a form to edit name and alt. The name is a small part of the src, without path nor file extension.
+    if (image instanceof ImageBlot) {
+      quill.setSelection(image.offset(quill.scroll), 1, 'user');
+    }
+
+    var click = JSON.stringify({
+      type: 'click',
+      data: { ev, target } });
+    sendMessage(click);
+  }, false);
 
 })(document)
 </script>

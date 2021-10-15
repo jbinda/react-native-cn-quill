@@ -16,6 +16,8 @@ export interface formatDefault {
 
 export interface ToggleData {
   name: string;
+  alias?: string;
+  styleAlias?: string;
   valueOn: string | number | boolean;
   valueOff: string | number | boolean;
   source: ImageSourcePropType;
@@ -38,6 +40,9 @@ export interface IconListData {
 
 export interface TextListData {
   name: string;
+  alias?: string;
+  styleAlias?: string;
+  source?: ImageSourcePropType;
   values: Array<ToggleData>;
   type: formatType.select;
 }

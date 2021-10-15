@@ -6,7 +6,11 @@ import type { ToggleData, ToolbarCustom, ToolbarTheme } from '../../types';
 export interface ContextProps {
   apply: (name: string, value: any) => void;
   selectedFormats: object;
-  isSelected: (name: string, value: any) => boolean;
+  isSelected: (
+    name: string,
+    value: any,
+    isSelectionCheck?: (selected: any) => boolean
+  ) => boolean;
   theme: ToolbarTheme;
   show: (name: string, options: Array<ToggleData>) => void;
   hide: Function;
@@ -14,6 +18,7 @@ export interface ContextProps {
   options: Array<ToggleData>;
   selectionName: string;
   getSelected: (name: string) => any;
+  availableSelections: string[];
 }
 
 const ToolbarContext = React.createContext<ContextProps>({
@@ -27,6 +32,7 @@ const ToolbarContext = React.createContext<ContextProps>({
   options: [],
   selectionName: '',
   getSelected: () => false,
+  availableSelections: [],
 });
 
 export const ToolbarConsumer = ToolbarContext.Consumer;
@@ -36,6 +42,7 @@ interface ProviderProps {
   selectedFormats: Record<string, any>;
   theme: ToolbarTheme;
   custom?: ToolbarCustom;
+  availableSelections: string[];
 }
 
 interface ProviderState {
@@ -101,9 +108,17 @@ export class ToolbarProvider extends Component<ProviderProps, ProviderState> {
     this.animatedValue = new Animated.Value(theme.size + 10);
   }
 
-  isSelected = (name: string, value: any = true): boolean => {
+  isSelected = (
+    name: string,
+    value: any = true,
+    isSelectionCheck?: (value: any, selected: any) => boolean
+  ): boolean => {
     const { selectedFormats } = this.props;
     const selected = selectedFormats[name];
+
+    if (selected && isSelectionCheck) {
+      return isSelectionCheck(value, selected);
+    }
     return selected ? selected === value : value === false;
   };
 
@@ -125,7 +140,12 @@ export class ToolbarProvider extends Component<ProviderProps, ProviderState> {
   };
 
   render() {
-    const { selectedFormats, children, theme } = this.props;
+    const {
+      selectedFormats,
+      children,
+      theme,
+      availableSelections,
+    } = this.props;
     const { open, options, name } = this.state;
     const styles = makeStyles(theme);
     return (
@@ -141,6 +161,7 @@ export class ToolbarProvider extends Component<ProviderProps, ProviderState> {
           getSelected: this.getSelected,
           selectionName: name,
           options,
+          availableSelections,
         }}
       >
         <Animated.View

@@ -1,4 +1,5 @@
 import { formats, formatType, formatValueType } from '../constants/formats';
+import type { ImageSourcePropType } from 'react-native';
 import type {
   ColorListData,
   formatDefault,
@@ -6,6 +7,14 @@ import type {
   ToggleData,
 } from '../types';
 import { icons as defaultIcons } from '../constants/icons';
+
+type ValueItem = {
+  name: string;
+  default?: boolean;
+  value: any;
+  icon: ImageSourcePropType;
+  type?: formatValueType;
+};
 
 export const getToolbarData = (
   options: Array<Array<string | object> | string | object>,
@@ -113,6 +122,7 @@ const createToolSet = (
             if (!format || format.type === formatType.select) {
               ic.push({
                 name: key,
+                source: formatIcon,
                 values: listItems.map((x) => {
                   let icon =
                     x.type === formatValueType.icon
@@ -165,9 +175,67 @@ const createToolSet = (
               } as ToggleData);
             }
           }
+        } else if (typeof value === 'object') {
+          const formatIcon = icons[key];
+          const icon = value.icon;
+          const listItems = value.values;
+          const alias = value.alias;
+          const styleAlias = value.styleAlias;
+
+          if (listItems.length > 0) {
+            if (!format || format.type === formatType.select) {
+              ic.push({
+                name: key,
+                alias,
+                styleAlias,
+                source: icon || formatIcon,
+                values: listItems
+                  .map((x: string | ValueItem) => {
+                    if (typeof x === 'string') {
+                      return {
+                        name: x,
+                        alias,
+                        styleAlias,
+                        valueOff: false,
+                        valueOn: x,
+                        source: icon,
+                        type: formatType.toggle,
+                      } as ToggleData;
+                    } else if (typeof x === 'object') {
+                      return {
+                        name: x.name,
+                        alias,
+                        styleAlias,
+                        valueOff: false,
+                        valueOn: x.default ? false : x.value,
+                        source: x.icon || icons[x.name],
+                        type: (x.icon ? true : false)
+                          ? formatType.icon
+                          : formatType.toggle,
+                      } as ToggleData;
+                    }
+                    return;
+                  })
+                  .filter((itemValue: any) => itemValue != null),
+                type: formatType.select,
+              } as TextListData);
+            }
+          }
         }
       }
     }
   }
   return ic;
+};
+
+export const isSelectionCheck = ({
+  valueOn,
+  styleAlias,
+}: {
+  valueOn: string | number | boolean;
+  styleAlias: string;
+}) => (value: any, selected?: any) => {
+  if (valueOn === false && value === false && !selected.includes(styleAlias))
+    return true;
+  return selected.includes(`${styleAlias}: ${value}`);
 };

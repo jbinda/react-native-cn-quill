@@ -8,6 +8,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import type { ToolbarTheme } from '../../types';
+import { isSelectionCheck } from '../../utils/toolbar-utils';
 import { useToolbar } from './toolbar-context';
 
 interface Props {
@@ -16,12 +17,25 @@ interface Props {
   valueOff?: string | number | boolean;
   style: StyleProp<ViewStyle>;
   name: string;
+  alias?: string;
+  styleAlias?: string;
 }
 
 export const ToggleTextButton: React.FC<Props> = (props) => {
   const { apply, isSelected, theme } = useToolbar();
-  const { name, valueOff, valueOn, valueName, style } = props;
-  const selected = isSelected(name, valueOn);
+  const {
+    name,
+    alias,
+    valueOff,
+    valueOn,
+    valueName,
+    styleAlias,
+    style,
+  } = props;
+
+  const selectionCallback =
+    alias && styleAlias ? isSelectionCheck({ valueOn, styleAlias }) : undefined;
+  const selected = isSelected(alias ?? name, valueOn, selectionCallback);
   const handlePresss = () => apply(name, selected ? valueOff : valueOn);
   const styles = makeStyles(theme);
   return (

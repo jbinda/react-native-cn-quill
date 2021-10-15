@@ -28,6 +28,9 @@ export const ToolSet: React.FC<Props> = (props) => {
   const renderTextList = (index: number, data: TextListData) => (
     <TextListButton
       key={index}
+      alias={data.alias}
+      styleAlias={data.styleAlias}
+      source={data?.source}
       name={data.name}
       items={data.values}
       style={toolStyle}
